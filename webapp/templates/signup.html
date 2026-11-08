@@ -1,0 +1,355 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - County Financial Tracker</title>
+    <style>
+        /* Modern Purple Theme */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Animated background shapes */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .signup-container {
+            /* Modern card effect */
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25),
+                        0 0 80px rgba(102, 126, 234, 0.3);
+            width: 100%;
+            max-width: 520px;
+            padding: 50px 45px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .signup-header .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+        }
+        
+        .signup-header .icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+        
+        .signup-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .signup-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background: #f5f5f5;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.2);
+            background: white;
+            outline: none;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            display: block;
+        }
+        
+        .btn-signup {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+        
+        .signup-links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            color: #888;
+        }
+        
+        .signup-links a {
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        
+        .signup-links a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        .alert {
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: none;
+            padding: 15px 20px;
+        }
+        
+        .password-requirements {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .row {
+            margin: 0 -10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .row > div {
+            padding: 0 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .signup-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            background: #f9f9f9;
+            border-radius: 0 0 24px 24px;
+            margin-left: -45px;
+            margin-right: -45px;
+            margin-bottom: -50px;
+            padding: 25px 45px;
+            color: #888;
+            text-align: center;
+        }
+        
+        .signup-footer p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .signup-footer strong {
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <h1>Create Account</h1>
+            <p>Join County Financial Tracker</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
+                <small class="password-requirements">Username must be unique</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                <small class="password-requirements">We'll never share your email with anyone</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="+254..." required>
+            </div>
+
+            <div class="mb-3">
+                <label for="county" class="form-label">County</label>
+                <select class="form-select" id="county" name="county" required>
+                    <option value="">Select your county</option>
+                    <option value="Baringo">Baringo</option>
+                    <option value="Bomet">Bomet</option>
+                    <option value="Bungoma">Bungoma</option>
+                    <option value="Busia">Busia</option>
+                    <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                    <option value="Embu">Embu</option>
+                    <option value="Garissa">Garissa</option>
+                    <option value="Homa Bay">Homa Bay</option>
+                    <option value="Isiolo">Isiolo</option>
+                    <option value="Kajiado">Kajiado</option>
+                    <option value="Kakamega">Kakamega</option>
+                    <option value="Kericho">Kericho</option>
+                    <option value="Kiambu">Kiambu</option>
+                    <option value="Kilifi">Kilifi</option>
+                    <option value="Kirinyaga">Kirinyaga</option>
+                    <option value="Kisii">Kisii</option>
+                    <option value="Kisumu">Kisumu</option>
+                    <option value="Kitui">Kitui</option>
+                    <option value="Kwale">Kwale</option>
+                    <option value="Laikipia">Laikipia</option>
+                    <option value="Lamu">Lamu</option>
+                    <option value="Machakos">Machakos</option>
+                    <option value="Makueni">Makueni</option>
+                    <option value="Mandera">Mandera</option>
+                    <option value="Marsabit">Marsabit</option>
+                    <option value="Meru">Meru</option>
+                    <option value="Migori">Migori</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Murang'a">Murang'a</option>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Nandi">Nandi</option>
+                    <option value="Narok">Narok</option>
+                    <option value="Nyamira">Nyamira</option>
+                    <option value="Nyandarua">Nyandarua</option>
+                    <option value="Nyeri">Nyeri</option>
+                    <option value="Samburu">Samburu</option>
+                    <option value="Siaya">Siaya</option>
+                    <option value="Taita-Taveta">Taita-Taveta</option>
+                    <option value="Tana River">Tana River</option>
+                    <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                    <option value="Trans-Nzoia">Trans-Nzoia</option>
+                    <option value="Turkana">Turkana</option>
+                    <option value="Uasin Gishu">Uasin Gishu</option>
+                    <option value="Vihiga">Vihiga</option>
+                    <option value="Wajir">Wajir</option>
+                    <option value="West Pokot">West Pokot</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">Role</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="citizen">Citizen</option>
+                    <option value="administrator">Government Official</option>
+                    {% comment %} <option value="auditor">Auditor</option> {% endcomment %}
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            {% comment %} <div class="mb-3">
+                <label for="bio" class="form-label">Bio (Optional)</label>
+                <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+            </div> {% endcomment %}
+
+            <div class="mb-3">
+                <label for="password1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="Create a strong password" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password2" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm your password" required>
+                <small class="password-requirements">Passwords must match</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-signup">Create Account</button>
+            
+            <div class="signup-links">
+                <p>Already have an account? <a href="{% url 'login' %}">Login Here</a></p>
+            </div>
+
+            <!-- Footer -->
+            <footer class="signup-footer">
+                <p class="mb-1"><small>&copy; 2026 County Financial Tracker</small></p>
+                <p class="mb-0"><small>Developed by <strong>Joseph</strong> | Built with <strong>emobilis</strong></small></p>
+            </footer>
+        </form>
+    </div>
+
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/language.js" %}"></script>
+</body>
+</html>

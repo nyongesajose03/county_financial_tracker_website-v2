@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Report</title>
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📊 County Financial Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/finance/">Financial Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'project_tracker' %}">Project Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About & Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/contact/">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Resources
+                        </a>
+                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/opinion/public/">View Public Opinions</a></li>
+                            <li><a class="dropdown-item" href="/opinion/my-opinions/">My Opinions</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                             <li><a class="dropdown-item" href="/opinion/submit/">Submit Opinion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="financial-reports">
+        <div class="container py-5">
+            <h1 class="mb-4 text-center">📋 Financial Reports</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Filter Options</h5>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="countySelect" class="form-label">County</label>
+                            <select class="form-select" id="countySelect">
+                                <option value="All">All Counties</option>
+                                <option value="Baringo">Baringo</option>
+                                <option value="Bomet">Bomet</option>
+                                <option value="Bungoma">Bungoma</option>
+                                <option value="Busia">Busia</option>
+                                <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                                <option value="Embu">Embu</option>
+                                <option value="Garissa">Garissa</option>
+                                <option value="Homa Bay">Homa Bay</option>
+                                <option value="Isiolo">Isiolo</option>
+                                <option value="Kajiado">Kajiado</option>
+                                <option value="Kakamega">Kakamega</option>
+                                <option value="Kericho">Kericho</option>
+                                <option value="Kiambu">Kiambu</option>
+                                <option value="Kilifi">Kilifi</option>
+                                <option value="Kirinyaga">Kirinyaga</option>
+                                <option value="Kisii">Kisii</option>
+                                <option value="Kisumu">Kisumu</option>
+                                <option value="Kitui">Kitui</option>
+                                <option value="Kwale">Kwale</option>
+                                <option value="Laikipia">Laikipia</option>
+                                <option value="Lamu">Lamu</option>
+                                <option value="Machakos">Machakos</option>
+                                <option value="Makueni">Makueni</option>
+                                <option value="Mandera">Mandera</option>
+                                <option value="Marsabit">Marsabit</option>
+                                <option value="Meru">Meru</option>
+                                <option value="Migori">Migori</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Murang'a">Murang'a</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Nakuru">Nakuru</option>
+                                <option value="Nandi">Nandi</option>
+                                <option value="Narok">Narok</option>
+                                <option value="Nyamira">Nyamira</option>
+                                <option value="Nyandarua">Nyandarua</option>
+                                <option value="Nyeri">Nyeri</option>
+                                <option value="Samburu">Samburu</option>
+                                <option value="Siaya">Siaya</option>
+                                <option value="Taita-Taveta">Taita-Taveta</option>
+                                <option value="Tana River">Tana River</option>
+                                <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                                <option value="Trans-Nzoia">Trans-Nzoia</option>
+                                <option value="Turkana">Turkana</option>
+                                <option value="Uasin Gishu">Uasin Gishu</option>
+                                <option value="Vihiga">Vihiga</option>
+                                <option value="Wajir">Wajir</option>
+                                <option value="West Pokot">West Pokot</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="yearSelect" class="form-label">Year</label>
+                            <select class="form-select" id="yearSelect">
+                                <option value="All">All Years</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="monthSelect" class="form-label">Month</label>
+                            <select class="form-select" id="monthSelect">
+                                <option value="All">All Months</option>
+                                <option value="Jan">January</option>
+                                <option value="Feb">February</option>
+                                <option value="Mar">March</option>
+                                <option value="Apr">April</option>
+                                <option value="May">May</option>
+                                <option value="Jun">June</option>
+                                <option value="Jul">July</option>
+                                <option value="Aug">August</option>
+                                <option value="Sep">September</option>
+                                <option value="Oct">October</option>
+                                <option value="Nov">November</option>
+                                <option value="Dec">December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary w-100" id="generateReport">Generate Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" id="financialReportTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>County</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Revenue</th>
+                            <th>Expenditure</th>
+                            <th>FRNG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted mt-2">Note: FRNG is Fund Received from National Goverment</p>
+        </div>
+    </section>
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/language.js" %}"></script>
+    <script>
+        document.getElementById('generateReport').addEventListener('click', async function() {
+            const county = document.getElementById('countySelect').value;
+            const year = document.getElementById('yearSelect').value;
+            const month = document.getElementById('monthSelect').value;
+
+            const tbody = document.querySelector('#financialReportTable tbody');
+            tbody.innerHTML = '';
+            try {
+                const params = new URLSearchParams({county, year, month});
+                const response = await fetch(`/finance/report-data/?${params}`);
+                if (!response.ok) {
+                    throw new Error(`Financial report request failed: ${response.status}`);
+                }
+                const result = await response.json();
+                if (!result.data.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No data found.</td></tr>';
+                    return;
+                }
+
+                result.data.forEach(item => {
+                    const row = document.createElement('tr');
+                    [
+                        item.county,
+                        item.month,
+                        item.year,
+                        Number(item.revenue).toLocaleString(),
+                        Number(item.expenditure).toLocaleString(),
+                        Number(item.allocatedFunds).toLocaleString(),
+                    ].forEach(value => {
+                        const cell = document.createElement('td');
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    });
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching financial report:', error);
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load financial data. Please try again.</td></tr>';
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-2">&copy; 2026 County Financial Tracker</p>
+            <p class="mb-0">Developed by <strong>Joseph</strong> | Built with <strong>emobilis</strong></p>
+            <small class="text-muted">Enhancing Government Transparency & Accountability</small>
+        </div>
+    </footer>
+</body>
+</html>

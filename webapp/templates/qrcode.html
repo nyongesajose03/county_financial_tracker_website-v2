@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code - County Financial Tracker</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+</head>
+<body>
+    <main class="container py-5">
+        <a class="back-link d-inline-block mb-3" href="{% url 'settings' %}" aria-label="Back to settings">&larr; Back to Settings</a>
+        <section class="card shadow-sm mx-auto text-center" style="max-width: 560px;">
+            <div class="card-body p-4 p-md-5">
+                <h1 class="h3 mb-3">QR code for the website</h1>
+                <p class="text-muted">Scan this QR code while connected to the same Wi-Fi network. Sign in or create an account to continue.</p>
+                <img class="img-fluid mb-3" src="{% static 'images/site-access-qr.png' %}"
+                     alt="QR code to open County Financial Tracker on the same Wi-Fi network"
+                     width="320" height="320">
+                <p class="mb-1">Website address for phones on the same Wi-Fi network:</p>
+                <p><a href="{{ site_url }}">{{ site_url }}</a></p>
+                <p class="small text-muted mb-0">This QR code works only while this computer and your phone are connected to the same Wi-Fi network and the website server is running.</p>
+                <a class="btn btn-primary mt-4" href="{{ site_url }}">Open County Financial Tracker</a>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'js/language.js' %}"></script>
+</body>
+</html>

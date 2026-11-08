@@ -1,0 +1,448 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📊 County Financial Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/finance/">Financial Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'project_tracker' %}">Project Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About & Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/contact/">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Resources
+                        </a>
+                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/opinion/public/">View Public Opinions</a></li>
+                            <li><a class="dropdown-item" href="/opinion/my-opinions/">My Opinions</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                             <li><a class="dropdown-item" href="/opinion/submit/">Submit Opinion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1 class="text-center">County Financial Tracker</h1>
+        <p class="lead">Welcome to County Financial Tracker which tracks on county government budget, revenue and its expenditure plus tracks the progress of ongoing projects and planned ones in future.
+            It also gives out reports of finance. Therefore promoting transparency and accountability from the national government to the county governments.
+        </p>
+    </div>
+    <main class="container-fluid py-5">
+        <section class="Dashboard">
+            <div class="container">
+                <h2 class="mb-4 text-center">National Government Financial Overview</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">💰 Revenue</h5>
+                                <p class="card-text display-6">Ksh 10B</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-danger text-white h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">📉 Expenditure</h5>
+                                <p class="card-text display-6">Ksh 8B</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">📋 Budget</h5>
+                                <p class="card-text display-6">Ksh 12B</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="charts mt-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="Revenue Chart"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <canvas id="Expenditure Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="container mb-5">
+            <h2 class="card-title text-center mb-4">Anual Funds Allocation Overview</h2>
+            <p class="text-muted text-center">Illustrative sample allocations (Ksh millions).</p>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="countySelect" class="form-label">County</label>
+                    <select class="form-select" id="countySelect">
+                    <option value="All">All Counties</option>
+                    <option value="Baringo">Baringo</option>
+                    <option value="Bomet">Bomet</option>
+                    <option value="Bungoma">Bungoma</option>
+                    <option value="Busia">Busia</option>
+                    <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                    <option value="Embu">Embu</option>
+                    <option value="Garissa">Garissa</option>
+                    <option value="Homa Bay">Homa Bay</option>
+                    <option value="Isiolo">Isiolo</option>
+                    <option value="Kajiado">Kajiado</option>
+                    <option value="Kakamega">Kakamega</option>
+                    <option value="Kericho">Kericho</option>
+                    <option value="Kiambu">Kiambu</option>
+                    <option value="Kilifi">Kilifi</option>
+                    <option value="Kirinyaga">Kirinyaga</option>
+                    <option value="Kisii">Kisii</option>
+                    <option value="Kisumu">Kisumu</option>
+                    <option value="Kitui">Kitui</option>
+                    <option value="Kwale">Kwale</option>
+                    <option value="Laikipia">Laikipia</option>
+                    <option value="Lamu">Lamu</option>
+                    <option value="Machakos">Machakos</option>
+                    <option value="Makueni">Makueni</option>
+                    <option value="Mandera">Mandera</option>
+                    <option value="Marsabit">Marsabit</option>
+                    <option value="Meru">Meru</option>
+                    <option value="Migori">Migori</option>
+                    <option value="Mombasa">Mombasa</option>
+                    <option value="Murang'a">Murang'a</option>
+                    <option value="Nairobi">Nairobi</option>
+                    <option value="Nakuru">Nakuru</option>
+                    <option value="Nandi">Nandi</option>
+                    <option value="Narok">Narok</option>
+                    <option value="Nyamira">Nyamira</option>
+                    <option value="Nyandarua">Nyandarua</option>
+                    <option value="Nyeri">Nyeri</option>
+                    <option value="Samburu">Samburu</option>
+                    <option value="Siaya">Siaya</option>
+                    <option value="Taita-Taveta">Taita-Taveta</option>
+                    <option value="Tana River">Tana River</option>
+                    <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                    <option value="Trans-Nzoia">Trans-Nzoia</option>
+                    <option value="Turkana">Turkana</option>
+                    <option value="Uasin Gishu">Uasin Gishu</option>
+                    <option value="Vihiga">Vihiga</option>
+                    <option value="Wajir">Wajir</option>
+                    <option value="West Pokot">West Pokot</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="yearSelect" class="form-label">Year</label>
+                        <select class="form-select" id="yearSelect">
+                            <option value="All">All Years</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                        </select>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-primary" id="applyFilters">Track Anual Funds</button>
+                    </div>
+            </div>
+            <div class="table-responsive mt-4">
+                <table class="table table-striped table-hover" id="annualReportTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>County</th>
+                            <th>Year</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="container mb-5">
+            <h2 class="card-title text-center mb-4">Monthly Funds Allocation Overview</h2>
+            <p class="text-muted text-center">Illustrative monthly allocations sum to the annual allocation above.</p>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="monthlyCountySelect" class="form-label">County</label>
+                    <select class="form-select" id="monthlyCountySelect">
+                        <option value="All">All Counties</option>
+                        <option value="Baringo">Baringo</option>
+                        <option value="Bomet">Bomet</option>
+                        <option value="Bungoma">Bungoma</option>
+                        <option value="Busia">Busia</option>
+                        <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                        <option value="Embu">Embu</option>
+                        <option value="Garissa">Garissa</option>
+                        <option value="Homa Bay">Homa Bay</option>
+                        <option value="Isiolo">Isiolo</option>
+                        <option value="Kajiado">Kajiado</option>
+                        <option value="Kakamega">Kakamega</option>
+                        <option value="Kericho">Kericho</option>
+                        <option value="Kiambu">Kiambu</option>
+                        <option value="Kilifi">Kilifi</option>
+                        <option value="Kirinyaga">Kirinyaga</option>
+                        <option value="Kisii">Kisii</option>
+                        <option value="Kisumu">Kisumu</option>
+                        <option value="Kitui">Kitui</option>
+                        <option value="Kwale">Kwale</option>
+                        <option value="Laikipia">Laikipia</option>
+                        <option value="Lamu">Lamu</option>
+                        <option value="Machakos">Machakos</option>
+                        <option value="Makueni">Makueni</option>
+                        <option value="Mandera">Mandera</option>
+                        <option value="Marsabit">Marsabit</option>
+                        <option value="Meru">Meru</option>
+                        <option value="Migori">Migori</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Murang'a">Murang'a</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Nakuru">Nakuru</option>
+                        <option value="Nandi">Nandi</option>
+                        <option value="Narok">Narok</option>
+                        <option value="Nyamira">Nyamira</option>
+                        <option value="Nyandarua">Nyandarua</option>
+                        <option value="Nyeri">Nyeri</option>
+                        <option value="Samburu">Samburu</option>
+                        <option value="Siaya">Siaya</option>
+                        <option value="Taita-Taveta">Taita-Taveta</option>
+                        <option value="Tana River">Tana River</option>
+                        <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                        <option value="Trans-Nzoia">Trans-Nzoia</option>
+                        <option value="Turkana">Turkana</option>
+                        <option value="Uasin Gishu">Uasin Gishu</option>
+                        <option value="Vihiga">Vihiga</option>
+                        <option value="Wajir">Wajir</option>
+                        <option value="West Pokot">West Pokot</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="monthlyMonthSelect" class="form-label">Month</label>
+                    <select class="form-select" id="monthlyMonthSelect">
+                        <option value="All">All Months</option>
+                        <option value="Jan">Jan</option>
+                        <option value="Feb">Feb</option>
+                        <option value="Mar">Mar</option>
+                        <option value="Apr">Apr</option>
+                        <option value="May">May</option>
+                        <option value="Jun">Jun</option>
+                        <option value="Jul">Jul</option>
+                        <option value="Aug">Aug</option>
+                        <option value="Sep">Sep</option>
+                        <option value="Oct">Oct</option>
+                        <option value="Nov">Nov</option>
+                        <option value="Dec">Dec</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="monthlyYearSelect" class="form-label">Year</label>
+                    <select class="form-select" id="monthlyYearSelect">
+                        <option value="All">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                    </select>
+                </div>
+                <div class="col-12 text-center">
+                    <button class="btn btn-primary" id="applyMonthlyFilters">Track Monthly Funds</button>
+                </div>
+            </div>
+        </section>
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" id="financialReportTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>County</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Allocated Funds</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Loading and Status Messages -->
+            <div id="loadingMsg" class="alert alert-info mt-3" style="display: none;">
+                Loading financial data...
+            </div>
+            <div id="errorMsg" class="alert alert-danger mt-3" style="display: none;">
+                Error loading data. Please try again.
+            </div>
+        </div>
+    </main>
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/language.js" %}"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.querySelector('#financialReportTable tbody');
+            const loadingMsg = document.getElementById('loadingMsg');
+            const errorMsg = document.getElementById('errorMsg');
+
+            async function trackFunds(button, countyId, yearId, monthId, buttonText, resultsTableBody, annualSummary) {
+                const county = document.getElementById(countyId).value;
+                const year = document.getElementById(yearId).value;
+                const month = monthId ? document.getElementById(monthId).value : 'All';
+
+                loadingMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                resultsTableBody.innerHTML = '';
+                const buttons = [
+                    document.getElementById('applyFilters'),
+                    document.getElementById('applyMonthlyFilters'),
+                ];
+                buttons.forEach(item => {
+                    item.disabled = true;
+                });
+                button.textContent = 'Loading...';
+
+                try {
+                    const url = annualSummary
+                        ? `/finance/annual-allocation-data/?county=${encodeURIComponent(county)}&year=${encodeURIComponent(year)}`
+                        : `/finance/monthly-allocation-data/?county=${encodeURIComponent(county)}&year=${encodeURIComponent(year)}&month=${encodeURIComponent(month)}`;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Network error');
+                    const json = await response.json();
+                    
+                    if (json.data && json.data.length > 0) {
+                        json.data.forEach(row => {
+                            const tr = document.createElement('tr');
+                            if (annualSummary) {
+                                tr.innerHTML = `
+                                    <td>${row.county}</td>
+                                    <td>${row.year}</td>
+                                    <td><strong>Ksh ${(row.allocatedFunds / 1_000_000).toFixed(2)}M</strong></td>
+                                `;
+                            } else {
+                                tr.innerHTML = `
+                                    <td>${row.county}</td>
+                                    <td>${row.month}</td>
+                                    <td>${row.year}</td>
+                                    <td><strong>Ksh ${row.allocatedFunds.toLocaleString()}</strong></td>
+                                `;
+                            }
+                            resultsTableBody.appendChild(tr);
+                        });
+                    } else {
+                        const columnCount = annualSummary ? 3 : 4;
+                        resultsTableBody.innerHTML = `<tr><td colspan="${columnCount}" class="text-center text-muted">No data found.</td></tr>`;
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    errorMsg.style.display = 'block';
+                    const columnCount = annualSummary ? 3 : 4;
+                    resultsTableBody.innerHTML = `<tr><td colspan="${columnCount}" class="text-center text-danger">Failed to load data.</td></tr>`;
+                } finally {
+                    loadingMsg.style.display = 'none';
+                    buttons.forEach(item => {
+                        item.disabled = false;
+                    });
+                    button.textContent = buttonText;
+                }
+            }
+
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                trackFunds(
+                    this,
+                    'countySelect',
+                    'yearSelect',
+                    null,
+                    'Track Anual Funds',
+                    document.querySelector('#annualReportTable tbody'),
+                    true,
+                );
+            });
+            document.getElementById('applyMonthlyFilters').addEventListener('click', function() {
+                trackFunds(
+                    this,
+                    'monthlyCountySelect',
+                    'monthlyYearSelect',
+                    'monthlyMonthSelect',
+                    'Track Monthly Funds',
+                    tableBody,
+                    false,
+                );
+            });
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-2">&copy; 2026 County Financial Tracker</p>
+            <p class="mb-0">Developed by <strong>Joseph</strong> | Built with <strong>emobilis</strong></p>
+            <small class="text-muted">Enhancing Government Transparency & Accountability</small>
+        </div>
+    </footer>
+</body>
+</html>

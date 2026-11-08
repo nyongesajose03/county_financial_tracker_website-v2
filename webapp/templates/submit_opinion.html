@@ -1,0 +1,358 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Opinion - County Financial Tracker</title>
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .opinion-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .opinion-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .form-control, .form-select {
+            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .checkbox-wrapper input {
+            margin-right: 10px;
+        }
+        .rating-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .rating-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .rating-btn:hover {
+            border-color: #667eea;
+            background-color: #f0f0ff;
+        }
+        .rating-btn.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .alert {
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .info-box strong {
+            color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📊 County Financial Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/finance/">Financial Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'project_tracker' %}">Project Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About & Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/contact/">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Resources
+                        </a>
+                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/opinion/public/">View Public Opinions</a></li>
+                            <li><a class="dropdown-item" href="/opinion/my-opinions/">My Opinions</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                             <li><a class="dropdown-item" href="/opinion/submit/">Submit Opinion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="opinion-header">
+        <h1>💬 Share Your Opinion</h1>
+        <p>Help improve government services by sharing your feedback, complaints, suggestions, and inquiries</p>
+    </div>
+
+    <div class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="info-box">
+            <strong>ℹ️ Your Feedback Matters:</strong> Your opinions help the government understand citizen concerns and improve services. You can choose to make your opinion public to help others see what concerns are being raised.
+        </div>
+
+        <form method="POST" action="{% url 'submit_opinion' %}">
+            {% csrf_token %}
+
+            <!-- Opinion Type Section -->
+            <div class="form-section">
+                <h3>📋 Opinion Type</h3>
+                <div class="mb-3">
+                    <label for="opinion_type" class="form-label">What type of opinion are you submitting?</label>
+                    <select class="form-select" id="opinion_type" name="opinion_type" required>
+                        <option value="">Select opinion type</option>
+                        <option value="complaint">🚫 Complaint</option>
+                        <option value="suggestion">💡 Suggestion</option>
+                        <option value="praise">⭐ Praise</option>
+                        <option value="inquiry">❓ Inquiry</option>
+                        <option value="other">📝 Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Opinion Details Section -->
+            <div class="form-section">
+                <h3>✏️ Opinion Details</h3>
+                
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject *</label>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Brief subject of your opinion" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Your Message *</label>
+                    <textarea class="form-control" id="message" name="message" rows="6" placeholder="Describe your opinion in detail..." required></textarea>
+                </div>
+            </div>
+
+            <!-- Categorization Section -->
+            <div class="form-section">
+                <h3>🏛️ Categorization</h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="county" class="form-label">County (Optional)</label>
+                        <select class="form-select" id="county" name="county">
+                            <option value="">Select county (if specific)</option>
+                            <option value="Baringo">Baringo</option>
+                            <option value="Bomet">Bomet</option>
+                            <option value="Bungoma">Bungoma</option>
+                            <option value="Busia">Busia</option>
+                            <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+                            <option value="Embu">Embu</option>
+                            <option value="Garissa">Garissa</option>
+                            <option value="Homa Bay">Homa Bay</option>
+                            <option value="Isiolo">Isiolo</option>
+                            <option value="Kajiado">Kajiado</option>
+                            <option value="Kakamega">Kakamega</option>
+                            <option value="Kericho">Kericho</option>
+                            <option value="Kiambu">Kiambu</option>
+                            <option value="Kilifi">Kilifi</option>
+                            <option value="Kirinyaga">Kirinyaga</option>
+                            <option value="Kisii">Kisii</option>
+                            <option value="Kisumu">Kisumu</option>
+                            <option value="Kitui">Kitui</option>
+                            <option value="Kwale">Kwale</option>
+                            <option value="Laikipia">Laikipia</option>
+                            <option value="Lamu">Lamu</option>
+                            <option value="Machakos">Machakos</option>
+                            <option value="Makueni">Makueni</option>
+                            <option value="Mandera">Mandera</option>
+                            <option value="Marsabit">Marsabit</option>
+                            <option value="Meru">Meru</option>
+                            <option value="Migori">Migori</option>
+                            <option value="Mombasa">Mombasa</option>
+                            <option value="Murang'a">Murang'a</option>
+                            <option value="Nairobi">Nairobi</option>
+                            <option value="Nakuru">Nakuru</option>
+                            <option value="Nandi">Nandi</option>
+                            <option value="Narok">Narok</option>
+                            <option value="Nyamira">Nyamira</option>
+                            <option value="Nyandarua">Nyandarua</option>
+                            <option value="Nyeri">Nyeri</option>
+                            <option value="Samburu">Samburu</option>
+                            <option value="Siaya">Siaya</option>
+                            <option value="Taita-Taveta">Taita-Taveta</option>
+                            <option value="Tana River">Tana River</option>
+                            <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+                            <option value="Trans-Nzoia">Trans-Nzoia</option>
+                            <option value="Turkana">Turkana</option>
+                            <option value="Uasin Gishu">Uasin Gishu</option>
+                            <option value="Vihiga">Vihiga</option>
+                            <option value="Wajir">Wajir</option>
+                            <option value="West Pokot">West Pokot</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="department" class="form-label">Department (Optional)</label>
+                        <input type="text" class="form-control" id="department" name="department" placeholder="e.g., Finance, Health, Education">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Rate Your Experience (Optional)</label>
+                    <div class="rating-group">
+                        <input type="radio" name="rating" id="rating1" value="1" style="display: none;">
+                        <label for="rating1" class="rating-btn">1</label>
+                        
+                        <input type="radio" name="rating" id="rating2" value="2" style="display: none;">
+                        <label for="rating2" class="rating-btn">2</label>
+                        
+                        <input type="radio" name="rating" id="rating3" value="3" style="display: none;">
+                        <label for="rating3" class="rating-btn">3</label>
+                        
+                        <input type="radio" name="rating" id="rating4" value="4" style="display: none;">
+                        <label for="rating4" class="rating-btn">4</label>
+                        
+                        <input type="radio" name="rating" id="rating5" value="5" style="display: none;">
+                        <label for="rating5" class="rating-btn">5</label>
+                    </div>
+                    <small class="d-block mt-2">1 = Very Poor | 5 = Excellent</small>
+                </div>
+            </div>
+
+            <!-- Visibility Section -->
+            <div class="form-section">
+                <h3>👁️ Visibility</h3>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="is_public" name="is_public" class="form-check-input">
+                    <label for="is_public" class="form-check-label ms-2">
+                        Make this opinion public so other citizens can see it
+                    </label>
+                </div>
+                <small class="d-block mt-2 text-muted">
+                    When public, your opinion (but not your email) will be visible to other users on the platform. This helps identify common concerns.
+                </small>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="form-section text-center">
+                <button type="submit" class="btn btn-submit btn-lg">
+                    Submit Your Opinion
+                </button>
+                <a href="/" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/language.js" %}"></script>
+    <script>
+        // Rating button interaction
+        document.querySelectorAll('.rating-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-2">&copy; 2026 County Financial Tracker</p>
+            <p class="mb-0">Developed by <strong>Joseph</strong> | Built with <strong>emobilis</strong></p>
+            <small class="text-muted">Enhancing Government Transparency & Accountability</small>
+        </div>
+    </footer>
+</body>
+</html>

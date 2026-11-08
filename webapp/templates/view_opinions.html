@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static 'css/site-theme.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Opinions - County Financial Tracker</title>
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .opinion-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .opinion-header h1 {
+            font-size: 2rem;
+        }
+        .opinion-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        .opinion-card.complaint {
+            border-left-color: #dc3545;
+        }
+        .opinion-card.suggestion {
+            border-left-color: #17a2b8;
+        }
+        .opinion-card.praise {
+            border-left-color: #28a745;
+        }
+        .opinion-card.inquiry {
+            border-left-color: #ffc107;
+        }
+        .opinion-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .opinion-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .opinion-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .badge-custom {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-reviewed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-acknowledged {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-resolved {
+            background-color: #c3e6cb;
+            color: #155724;
+        }
+        .opinion-message {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .admin-response {
+            background-color: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .admin-response h5 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">📊 County Financial Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/finance/">Financial Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'project_tracker' %}">Project Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About & Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/contact/">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Resources
+                        </a>
+                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/opinion/public/">View Public Opinions</a></li>
+                            <li><a class="dropdown-item" href="/opinion/my-opinions/">My Opinions</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                             <li><a class="dropdown-item" href="/opinion/submit/">Submit Opinion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="opinion-header">
+        <h1>📋 My Opinions</h1>
+        <p>Track the status of your submitted opinions and feedback</p>
+    </div>
+
+    <div class="container py-4">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h5>Filter by Status</h5>
+            <div class="btn-group" role="group">
+                <a href="/opinion/my-opinions/" class="btn btn-sm {% if not request.GET.status %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    All
+                </a>
+                {% for status_code, status_label in status_choices %}
+                    <a href="?status={{ status_code }}" class="btn btn-sm {% if request.GET.status == status_code %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        {{ status_label }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if opinions %}
+            <div class="opinions-list">
+                {% for opinion in opinions %}
+                    <div class="opinion-card {{ opinion.opinion_type }}">
+                        <div class="opinion-header-row">
+                            <div>
+                                <div class="opinion-title">{{ opinion.subject }}</div>
+                                <div class="opinion-meta">
+                                    <span class="badge-custom status-{{ opinion.status }}">{{ opinion.get_status_display }}</span>
+                                    <span>📝 {{ opinion.get_opinion_type_display }}</span>
+                                    <span>📅 {{ opinion.created_at|date:"M d, Y" }}</span>
+                                    {% if opinion.is_public %}
+                                        <span>👁️ Public</span>
+                                    {% else %}
+                                        <span>🔒 Private</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if opinion.rating %}
+                                <div class="rating-stars">
+                                    {% for i in "12345" %}
+                                        {% if i|add:0 <= opinion.rating %}
+                                            ⭐
+                                        {% else %}
+                                            ☆
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="opinion-message">
+                            {{ opinion.message }}
+                        </div>
+
+                        <div style="font-size: 0.9rem; color: #666;">
+                            {% if opinion.county %}
+                                <strong>County:</strong> {{ opinion.county }} |
+                            {% endif %}
+                            {% if opinion.department %}
+                                <strong>Department:</strong> {{ opinion.department }}
+                            {% endif %}
+                        </div>
+
+                        {% if opinion.admin_response %}
+                            <div class="admin-response">
+                                <h5>🏛️ Government Response</h5>
+                                <p>{{ opinion.admin_response }}</p>
+                                <small>Responded on {{ opinion.response_date|date:"M d, Y H:i" }}</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Total Opinions:</strong> {{ opinions|length }}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>📭 No Opinions Yet</h3>
+                <p>You haven't submitted any opinions yet.</p>
+                <a href="{% url 'submit_opinion' %}" class="btn btn-primary btn-lg mt-3">
+                    Submit Your First Opinion
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/language.js" %}"></script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-2">&copy; 2026 County Financial Tracker</p>
+            <p class="mb-0">Developed by <strong>Joseph</strong> | Built with <strong>emobilis</strong></p>
+            <small class="text-muted">Enhancing Government Transparency & Accountability</small>
+        </div>
+    </footer>
+</body>
+</html>
